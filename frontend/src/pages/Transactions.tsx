@@ -19,7 +19,7 @@ export default function Transactions() {
    if(details?.missing_accounts?.length){lines.push(`Unknown account IDs: ${details.missing_accounts.slice(0,5).join(", ")}`);lines.push("Seed customer/account master data before uploading transactions.")}
    if(details?.missing?.length)lines.push(`Missing columns: ${details.missing.join(", ")}`)
    if(details?.errors?.length)lines.push(...details.errors.slice(0,8).map(x=>`Line ${x.row??"?"}${x.field?` · ${x.field}`:""}: ${x.message??"Invalid value"}`))
-   setError(lines.join("\\n"));return
+   setError(lines.join("\n"));return
   }
   if(typeof body?.accepted!=="number")throw new Error("Unexpected upload response from the API.")
   setNotice(`Imported ${body.accepted} transactions from ${body.filename??file.name}`);await load()
