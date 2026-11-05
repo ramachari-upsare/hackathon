@@ -24,8 +24,8 @@ Then upload `test/fixtures/transactions_review_signals.csv` from Transaction Mon
 Requirements: Node.js 20+, Python 3.11 recommended.
 
 ```powershell
-git clone -b nexguard-submission https://github.com/ramachari-upsare/hackathon.git
-cd hackathon
+git clone -b main https://github.com/ramachari-upsare/hackathon.git NexGuard
+cd NexGuard
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install
 py -3.11 -m venv backend\\.venv
