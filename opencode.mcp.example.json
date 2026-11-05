@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "nexguard": {
+      "type": "local",
+      "command": [".venv/Scripts/python.exe", "-m", "app.mcp.server"],
+      "cwd": "./backend",
+      "environment": {
+        "NEXGUARD_API_BASE_URL": "http://127.0.0.1:8000"
+      },
+      "enabled": true
+    }
+  }
+}

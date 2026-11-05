@@ -1,1 +1,1 @@
-"""Reserved for the Phase 2 MCP server. No Phase 1 implementation."""
+"""NexGuard Model Context Protocol server package."""
