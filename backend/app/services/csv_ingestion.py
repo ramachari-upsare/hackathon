@@ -18,16 +18,26 @@ from app.models.transaction import (
     TransactionCsvRow,
 )
 
+# Currency and channel have safe model defaults; only these four fields
+# are mandatory in a transaction export.
 REQUIRED_COLUMNS = frozenset(
-    {
-        "from_account",
-        "to_account",
-        "amount",
-        "currency",
-        "timestamp",
-        "channel",
-    }
+    {"from_account", "to_account", "amount", "timestamp"}
 )
+
+HEADER_ALIASES = {
+    "from account": "from_account",
+    "sender_account": "from_account",
+    "source_account": "from_account",
+    "to account": "to_account",
+    "receiver_account": "to_account",
+    "destination_account": "to_account",
+    "transaction_amount": "amount",
+    "transaction_currency": "currency",
+    "transaction_timestamp": "timestamp",
+    "date": "timestamp",
+    "transaction_date": "timestamp",
+    "payment_channel": "channel",
+}
 MAX_REPORTED_ERRORS = 200
 
 
@@ -91,8 +101,14 @@ def parse_transactions_csv(
             message="CSV must be UTF-8 encoded",
         ) from exc
 
+    # Excel exports may use semicolons or tabs depending on regional
+    # settings. Detect the delimiter before constructing DictReader.
     try:
-        reader = csv.DictReader(io.StringIO(text, newline=""))
+        try:
+            dialect = csv.Sniffer().sniff(text[:8192], delimiters=",;\\t|")
+        except csv.Error:
+            dialect = csv.excel
+        reader = csv.DictReader(io.StringIO(text, newline=""), dialect=dialect)
     except csv.Error as exc:
         raise _structural_error(
             code="invalid_csv",
@@ -107,8 +123,16 @@ def parse_transactions_csv(
         )
 
     normalized_headers = [
-        header.strip().lower() for header in reader.fieldnames if header
+        HEADER_ALIASES.get(
+            header.strip().lower().lstrip("\\ufeff"),
+            header.strip().lower().lstrip("\\ufeff"),
+        )
+        for header in reader.fieldnames
+        if header
     ]
+    # DictReader uses original header strings as row keys; replace them with
+    # normalized names so aliases, whitespace and case work consistently.
+    reader.fieldnames = normalized_headers
     if len(normalized_headers) != len(set(normalized_headers)):
         raise _structural_error(
             code="duplicate_csv_columns",
