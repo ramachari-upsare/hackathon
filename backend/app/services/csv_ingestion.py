@@ -105,7 +105,7 @@ def parse_transactions_csv(
     # settings. Detect the delimiter before constructing DictReader.
     try:
         try:
-            dialect = csv.Sniffer().sniff(text[:8192], delimiters=",;\\t|")
+            dialect = csv.Sniffer().sniff(text[:8192], delimiters=",;" + chr(9) + "|")
         except csv.Error:
             dialect = csv.excel
         reader = csv.DictReader(io.StringIO(text, newline=""), dialect=dialect)
@@ -124,7 +124,7 @@ def parse_transactions_csv(
 
     normalized_headers = [
         HEADER_ALIASES.get(
-            header.strip().lower().lstrip("\\ufeff"),
+            header.strip().lower().lstrip(chr(0xFEFF)),
             header.strip().lower().lstrip("\\ufeff"),
         )
         for header in reader.fieldnames
