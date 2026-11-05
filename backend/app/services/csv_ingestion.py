@@ -125,7 +125,7 @@ def parse_transactions_csv(
     normalized_headers = [
         HEADER_ALIASES.get(
             header.strip().lower().lstrip(chr(0xFEFF)),
-            header.strip().lower().lstrip("\\ufeff"),
+            header.strip().lower().lstrip(chr(0xFEFF)),
         )
         for header in reader.fieldnames
         if header
