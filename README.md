@@ -24,8 +24,8 @@ Then upload `test/fixtures/transactions_review_signals.csv` from Transaction Mon
 Requirements: Node.js 20+, Python 3.11 recommended.
 
 ```powershell
-git clone -b nexguard-submission https://github.com/ramachari-upsare/hackathon.git
-cd hackathon
+git clone -b main https://github.com/ramachari-upsare/hackathon.git NexGuard
+cd NexGuard
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install
 py -3.11 -m venv backend\\.venv
@@ -109,7 +109,7 @@ If OpenCode cannot start the server, confirm the API is running, the Python exec
 4. Run a detection scan with `POST /api/v1/detection/scan`.
 5. Review prioritized alerts with `GET /api/v1/alerts` and alert details with `GET /api/v1/alerts/{id}`.
 
-CSV fields include `from_account`, `to_account`, `amount`, `currency`, `timestamp`; optional fields include `id`, `device_id`, `ip_address`, `channel`, and `label`. See `data/sample_transactions.csv`.
+CSV required fields are `from_account`, `to_account`, `amount`, and `timestamp`. `currency` defaults to `USD` and `channel` defaults to `api`; both may be supplied. Optional fields include `id`, `device_id`, `ip_address`, and `label`. The importer detects comma-, semicolon-, and tab-delimited files, strips a UTF-8 BOM, and normalizes header case and whitespace. Supported channel values include `mobile`, `web`, `atm`, `branch`, `api`, `wire`, `upi`, `card`, and `bank_transfer`. Use the matching master-data account UUIDs from `test/fixtures/accounts.csv`; arbitrary UUIDs will be rejected as unknown accounts.
 
 ## Detection design
 
