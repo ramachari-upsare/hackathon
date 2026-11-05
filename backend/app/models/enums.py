@@ -20,6 +20,8 @@ class Channel(StrEnum):
     API = "api"
     WIRE = "wire"
     UPI = "upi"
+    CARD = "card"
+    BANK_TRANSFER = "bank_transfer"
 
 
 class RiskLevel(StrEnum):
